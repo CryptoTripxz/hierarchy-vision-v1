@@ -1,0 +1,1334 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="HierarchiVision - Vision Board with Pinup Board Aesthetic">
+    <meta name="theme-color" content="#0f172a">
+    <title>HierarchiVision - Vision Board for Growth</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html, body {
+            font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%);
+            color: #f1f5f9;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .screen {
+            display: none;
+            animation: fadeIn 0.5s ease-out;
+            min-height: 100vh;
+            width: 100%;
+            flex-direction: column;
+        }
+
+        .screen.active {
+            display: flex;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+
+        /* SPLASH SCREEN */
+        #splashScreen {
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .splash-header {
+            text-align: center;
+            margin-bottom: 50px;
+            animation: slideUp 0.8s ease-out;
+        }
+
+        .splash-header .emoji {
+            font-size: 80px;
+            margin-bottom: 20px;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        .splash-header h1 {
+            font-family: "Playfair Display", serif;
+            font-size: clamp(2.5rem, 8vw, 4rem);
+            margin-bottom: 15px;
+            background: linear-gradient(135deg, #a78bfa 0%, #f472b6 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .splash-header p {
+            font-size: 1.25rem;
+            color: #cbd5e1;
+        }
+
+        .quiz-container {
+            max-width: 500px;
+            width: 100%;
+            margin-bottom: 30px;
+        }
+
+        .season-option {
+            width: 100%;
+            padding: 20px;
+            margin-bottom: 15px;
+            border: 2px solid #475569;
+            border-radius: 12px;
+            background: #1e293b;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+            animation: slideUp 0.6s ease-out backwards;
+        }
+
+        .season-option:hover {
+            border-color: #64748b;
+            transform: translateY(-4px);
+        }
+
+        .season-option.active {
+            border-color: white;
+            box-shadow: 0 0 30px rgba(168, 85, 247, 0.5);
+        }
+
+        .season-option.spring.active { background: linear-gradient(135deg, #4ade80 0%, #10b981 100%); color: white; }
+        .season-option.summer.active { background: linear-gradient(135deg, #facc15 0%, #f59e0b 100%); color: white; }
+        .season-option.autumn.active { background: linear-gradient(135deg, #d97706 0%, #dc2626 100%); color: white; }
+        .season-option.winter.active { background: linear-gradient(135deg, #60a5fa 0%, #06b6d4 100%); color: white; }
+
+        .season-option-emoji { font-size: 2.5rem; margin-bottom: 10px; display: block; }
+        .season-option-title { font-weight: 600; font-size: 1.2rem; margin-bottom: 8px; }
+        .season-option-desc { font-size: 0.9rem; opacity: 0.8; }
+
+        .btn-primary {
+            padding: 15px 40px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            background: linear-gradient(135deg, #a855f7 0%, #ec4899 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 25px rgba(168, 85, 247, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 35px rgba(168, 85, 247, 0.5);
+        }
+
+        .btn-primary:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        /* COMMON BUTTONS */
+        .btn-back {
+            margin-bottom: 20px;
+            padding: 10px 20px;
+            background: #475569;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+        }
+
+        .btn-back:hover {
+            background: #64748b;
+        }
+
+        .btn-action {
+            padding: 12px 25px;
+            background: linear-gradient(135deg, #a855f7 0%, #ec4899 100%);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-action:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(168, 85, 247, 0.3);
+        }
+
+        .btn-action.secondary {
+            background: linear-gradient(135deg, #d4a574 0%, #c9a872 100%);
+            color: #2a2a2a;
+        }
+
+        .btn-action.secondary:hover {
+            box-shadow: 0 10px 20px rgba(212, 165, 116, 0.3);
+        }
+
+        /* STRATEGIES SCREEN (ORIGINAL STYLE) */
+        .strategies-content, .chosen-content, .visionboard-content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+        }
+
+        h2 {
+            font-family: "Playfair Display", serif;
+            font-size: 2.5rem;
+            color: #f1f5f9;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+
+        h2 + p {
+            color: #cbd5e1;
+            font-size: 1.05rem;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .season-filter {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .season-btn {
+            padding: 10px 20px;
+            border: 2px solid #475569;
+            background: transparent;
+            color: #cbd5e1;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .season-btn:hover {
+            border-color: #a78bfa;
+        }
+
+        .season-btn.active {
+            color: white;
+            border-color: #a855f7;
+            background: rgba(168, 85, 247, 0.2);
+        }
+
+        /* STRATEGIES GRID (ORIGINAL STYLE) */
+        .strategies-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+            max-width: 1200px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .strategy-tile {
+            background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+            border: 2px solid #475569;
+            border-radius: 12px;
+            padding: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            animation: slideUp 0.6s ease-out backwards;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .strategy-tile.selected {
+            border-color: #a855f7;
+            background: linear-gradient(135deg, #2d1b4e 0%, #3d2463 100%);
+            box-shadow: 0 0 20px rgba(168, 85, 247, 0.3);
+        }
+
+        .strategy-tile:hover {
+            border-color: #a78bfa;
+            transform: translateY(-4px);
+            box-shadow: 0 10px 30px rgba(168, 85, 247, 0.2);
+        }
+
+        .strategy-checkbox {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            width: 22px;
+            height: 22px;
+            cursor: pointer;
+            accent-color: #a855f7;
+        }
+
+        .strategy-title {
+            font-weight: 600;
+            color: #f1f5f9;
+            margin-bottom: 8px;
+            margin-top: 30px;
+            font-size: 1.05rem;
+        }
+
+        .strategy-category {
+            display: inline-block;
+            padding: 4px 10px;
+            background: #475569;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            color: #cbd5e1;
+            margin-bottom: 12px;
+        }
+
+        .strategy-description {
+            color: #cbd5e1;
+            font-size: 0.95rem;
+            line-height: 1.5;
+            flex: 1;
+        }
+
+        /* CHOSEN SUMMARY */
+        .chosen-summary {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-bottom: 40px;
+        }
+
+        .summary-card {
+            background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+            border: 2px solid #475569;
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            animation: slideUp 0.6s ease-out backwards;
+        }
+
+        .summary-number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #a855f7;
+        }
+
+        .summary-label {
+            font-size: 0.85rem;
+            color: #cbd5e1;
+            margin-top: 5px;
+        }
+
+        .chosen-list {
+            background: #1e293b;
+            border: 2px solid #334155;
+            border-radius: 12px;
+            padding: 30px;
+            margin-bottom: 30px;
+            max-width: 1200px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .chosen-list h3 {
+            color: #f1f5f9;
+            margin-bottom: 20px;
+            font-size: 1.3rem;
+        }
+
+        .chosen-by-layer {
+            margin-bottom: 30px;
+        }
+
+        .layer-name {
+            font-weight: 600;
+            color: #a78bfa;
+            margin-bottom: 12px;
+            font-size: 1.1rem;
+        }
+
+        .chosen-items {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .chosen-item {
+            background: #334155;
+            padding: 10px 15px;
+            border-radius: 6px;
+            color: #cbd5e1;
+            font-size: 0.95rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .chosen-item-remove {
+            background: none;
+            border: none;
+            color: #94a3b8;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: color 0.3s ease;
+            padding: 0;
+        }
+
+        .chosen-item-remove:hover {
+            color: #ef4444;
+        }
+
+        /* PINBOARD STYLES (FOR VISION BOARD) */
+        .pinboard-container {
+            background: linear-gradient(135deg, #c4a57b 0%, #d4a574 50%, #b8956a 100%);
+            background-attachment: fixed;
+            border: 15px solid #8B4513;
+            border-radius: 8px;
+            box-shadow: inset 0 0 30px rgba(0,0,0,0.3), 0 15px 40px rgba(0,0,0,0.5);
+            min-height: 600px;
+            position: relative;
+            overflow: hidden;
+            margin: 30px auto;
+            max-width: 1400px;
+            width: 90%;
+        }
+
+        .pinboard-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: 
+                repeating-linear-gradient(90deg, transparent, transparent 2px, rgba(0,0,0,.03) 2px, rgba(0,0,0,.03) 4px),
+                repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,.03) 2px, rgba(0,0,0,.03) 4px);
+            pointer-events: none;
+        }
+
+        .vision-pinboard {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            padding: 30px;
+            position: relative;
+            z-index: 1;
+            align-content: flex-start;
+        }
+
+        .vision-pinboard.edit-mode {
+            padding: 15px;
+            background: rgba(0,0,0,0.2);
+        }
+
+        .pinned-image {
+            position: relative;
+            background: white;
+            padding: 8px;
+            border-radius: 2px;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.25);
+            cursor: move;
+            transition: box-shadow 0.3s ease;
+            animation: slideUp 0.6s ease-out backwards;
+            user-select: none;
+        }
+
+        .pinned-image.dragging {
+            opacity: 0.8;
+            box-shadow: 0 12px 30px rgba(0,0,0,0.5);
+            z-index: 1000;
+        }
+
+        .pinned-image.edit-mode {
+            cursor: grab;
+            border: 2px dashed #a855f7;
+        }
+
+        .pinned-image.edit-mode:active {
+            cursor: grabbing;
+        }
+
+        .pinned-image:hover {
+            box-shadow: 0 12px 24px rgba(0,0,0,0.35);
+        }
+
+        .pinned-image img {
+            width: 100%;
+            height: auto;
+            display: block;
+            border-radius: 2px;
+            transform: rotate(var(--rotation, 0deg));
+            transition: transform 0.3s ease;
+            pointer-events: none;
+        }
+
+        .pinned-image::before {
+            content: '';
+            position: absolute;
+            top: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 18px;
+            height: 18px;
+            background: radial-gradient(circle at 30% 30%, #ffeb3b, #fbc02d);
+            border-radius: 50%;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.4), inset -1px -1px 2px rgba(0,0,0,0.2);
+            z-index: 10;
+        }
+
+        .pinned-image::after {
+            content: '';
+            position: absolute;
+            top: -8px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 8px;
+            height: 8px;
+            background: radial-gradient(circle at 30% 30%, #fff, #ddd);
+            border-radius: 50%;
+            z-index: 11;
+        }
+
+        .pinned-controls {
+            position: absolute;
+            bottom: 8px;
+            left: 8px;
+            right: 8px;
+            background: rgba(0,0,0,0.8);
+            padding: 8px;
+            border-radius: 4px;
+            display: flex;
+            gap: 8px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: 20;
+        }
+
+        .pinned-image:hover .pinned-controls {
+            opacity: 1;
+        }
+
+        .pinned-image.edit-mode .pinned-controls {
+            opacity: 1;
+        }
+
+        .control-btn {
+            flex: 1;
+            padding: 6px 10px;
+            background: #8B7355;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            transition: background 0.3s ease;
+        }
+
+        .control-btn:hover {
+            background: #d4a574;
+        }
+
+        .rotate-input {
+            position: absolute;
+            bottom: 40px;
+            left: 8px;
+            display: none;
+            z-index: 30;
+        }
+
+        .rotate-input.active {
+            display: flex;
+            gap: 8px;
+            background: rgba(0,0,0,0.9);
+            padding: 10px;
+            border-radius: 6px;
+        }
+
+        .rotate-input input {
+            width: 60px;
+            padding: 6px;
+            border: none;
+            border-radius: 4px;
+        }
+
+        .rotate-input button {
+            padding: 6px 12px;
+            background: #8B7355;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.8rem;
+        }
+
+        .edit-hint {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: rgba(168, 85, 247, 0.2);
+            border: 1px solid #a855f7;
+            color: #a78bfa;
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            z-index: 50;
+            display: none;
+        }
+
+        .edit-hint.active {
+            display: block;
+        }
+
+        /* UPLOAD SECTION */
+        .upload-section {
+            background: linear-gradient(135deg, #c4a57b 0%, #d4a574 100%);
+            border: 3px dashed #8B7355;
+            border-radius: 12px;
+            padding: 40px;
+            text-align: center;
+            margin: 30px auto;
+            max-width: 900px;
+            width: 90%;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .upload-section:hover {
+            border-color: #d4a574;
+            background: linear-gradient(135deg, #d4a574 0%, #e8b394 100%);
+        }
+
+        .upload-section p {
+            color: #2a2a2a;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+
+        .file-input-label {
+            padding: 12px 30px;
+            background: #8B7355;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            display: inline-block;
+            transition: all 0.3s ease;
+        }
+
+        .file-input-label:hover {
+            background: #6b5444;
+            transform: translateY(-2px);
+        }
+
+        #imageFileInput {
+            display: none;
+        }
+
+        /* ACTION BAR */
+        .action-bar {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            justify-content: center;
+            padding: 30px;
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            position: sticky;
+            bottom: 0;
+            z-index: 100;
+            border-top: 2px solid #475569;
+        }
+
+        .action-bar .btn-action {
+            flex: 0 1 auto;
+        }
+
+        .empty-board {
+            text-align: center;
+            padding: 80px 20px;
+            color: #8B7355;
+        }
+
+        .empty-board-icon {
+            font-size: 4rem;
+            margin-bottom: 20px;
+            opacity: 0.5;
+        }
+
+        @media (max-width: 768px) {
+            .strategies-grid {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+
+            .vision-pinboard {
+                gap: 15px;
+                padding: 15px;
+            }
+
+            h2 {
+                font-size: 1.8rem;
+            }
+
+            .action-bar {
+                flex-direction: column;
+            }
+
+            .action-bar .btn-action {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- SPLASH SCREEN -->
+    <div id="splashScreen" class="screen active">
+        <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; flex: 1; padding: 20px;">
+            <div class="splash-header">
+                <span class="emoji">🌍</span>
+                <h1>HierarchiVision</h1>
+                <p>Create your seasonal vision board</p>
+            </div>
+
+            <div class="quiz-container">
+                <div style="text-align: center; font-size: 1.25rem; margin-bottom: 30px; color: #e2e8f0;">What season are you in?</div>
+                
+                <button class="season-option spring" data-season="Spring">
+                    <span class="season-option-emoji">🌱</span>
+                    <div class="season-option-title">SPRING</div>
+                    <div class="season-option-desc">Fresh growth and new beginnings</div>
+                </button>
+
+                <button class="season-option summer" data-season="Summer">
+                    <span class="season-option-emoji">☀️</span>
+                    <div class="season-option-title">SUMMER</div>
+                    <div class="season-option-desc">Peak energy and momentum</div>
+                </button>
+
+                <button class="season-option autumn" data-season="Autumn">
+                    <span class="season-option-emoji">🍂</span>
+                    <div class="season-option-title">AUTUMN</div>
+                    <div class="season-option-desc">Harvest and reflection</div>
+                </button>
+
+                <button class="season-option winter" data-season="Winter">
+                    <span class="season-option-emoji">❄️</span>
+                    <div class="season-option-title">WINTER</div>
+                    <div class="season-option-desc">Rest and renewal</div>
+                </button>
+            </div>
+
+            <button id="startBtn" class="btn-primary" disabled>Explore Strategies</button>
+        </div>
+    </div>
+
+    <!-- STRATEGIES SCREEN (ORIGINAL STYLE) -->
+    <div id="strategiesScreen" class="screen">
+        <div class="strategies-content">
+            <button class="btn-back" onclick="goToSplash()">← Back to Season</button>
+            <h2>Seasonal Strategies</h2>
+            <p>Select strategies that resonate with you</p>
+
+            <div class="season-filter" id="seasonFilter"></div>
+
+            <div class="strategies-grid" id="strategiesGrid"></div>
+        </div>
+
+        <div class="action-bar">
+            <button class="btn-action" onclick="goToSplash()">← Back</button>
+            <button class="btn-action" onclick="goToChosen()">📋 View Chosen (<span id="chosenCount">0</span>)</button>
+        </div>
+    </div>
+
+    <!-- CHOSEN STRATEGIES SCREEN -->
+    <div id="chosenScreen" class="screen">
+        <div class="chosen-content">
+            <button class="btn-back" onclick="goToStrategies()">← Back to Strategies</button>
+            <h2>Your Chosen Strategies</h2>
+            <p>Strategies you selected for your journey</p>
+
+            <div class="chosen-summary" id="chosenSummary"></div>
+
+            <div class="chosen-list">
+                <h3>Selected Strategies</h3>
+                <div id="chosenListContent"></div>
+            </div>
+        </div>
+
+        <div class="action-bar">
+            <button class="btn-action" onclick="goToStrategies()">← Back to Strategies</button>
+            <button class="btn-action" onclick="goToVisionBoard()">📌 Create Vision Board →</button>
+        </div>
+    </div>
+
+    <!-- VISION BOARD SCREEN (PINUP BOARD WITH EDIT MODE) -->
+    <div id="visionBoardScreen" class="screen">
+        <div class="visionboard-content">
+            <button class="btn-back" onclick="goToChosen()">← Back to Strategies</button>
+            <h2>Create Your Vision Board</h2>
+            <p>Upload images and arrange them on your pinup board</p>
+
+            <div class="upload-section" onclick="document.getElementById('imageFileInput').click()">
+                <p>📸 Click to upload images or drag and drop</p>
+                <label class="file-input-label">Choose Images</label>
+                <input type="file" id="imageFileInput" multiple accept="image/*">
+            </div>
+
+            <div class="pinboard-container">
+                <div class="edit-hint" id="editHint">✏️ Drag images to reposition them</div>
+                <div class="vision-pinboard" id="visionPinboard"></div>
+            </div>
+        </div>
+
+        <div class="action-bar">
+            <button class="btn-action" onclick="goToChosen()">← Back</button>
+            <button class="btn-action secondary" id="editToggleBtn" onclick="toggleEditMode()">✏️ Edit Board</button>
+            <button class="btn-action" onclick="saveBoard()">💾 Save Board</button>
+            <button class="btn-action" onclick="shareBoard()">📤 Share Board</button>
+            <button class="btn-action" onclick="downloadBoard()">⬇️ Download</button>
+        </div>
+    </div>
+
+    <script>
+        const app = {
+            currentSeason: null,
+            chosenStrategies: [],
+            visionBoardImages: [],
+            editMode: false,
+            draggedElement: null,
+            strategies: {
+                Spring: {
+                    physiological: [
+                        {title: "Plant-Based Eating", description: "Embrace spring vegetables and fresh produce."},
+                        {title: "Outdoor Movement", description: "Take advantage of mild weather."},
+                        {title: "Hydration Ritual", description: "Reset water intake with herbal teas."}
+                    ],
+                    safety: [
+                        {title: "Spring Cleaning", description: "Deep clean your space to create order."},
+                        {title: "New Budget", description: "Spring is renewal - refresh your financial plan."},
+                        {title: "Home Safety Check", description: "Inspect your space and update insurance."}
+                    ],
+                    love: [
+                        {title: "Community Engagement", description: "Join spring events and volunteer."},
+                        {title: "Reconnect Ritual", description: "Reach out to old friends. Plan meetups."},
+                        {title: "Love Letter", description: "Write appreciation notes to people who matter."}
+                    ],
+                    esteem: [
+                        {title: "New Goals", description: "Start fresh projects. Set ambitious goals."},
+                        {title: "Skill Building", description: "Begin a new course or learn an instrument."},
+                        {title: "Public Speaking", description: "Share your ideas and present your work."}
+                    ],
+                    actualization: [
+                        {title: "Creative Awakening", description: "Start a creative project."},
+                        {title: "Vision Quest", description: "Spend time in nature for clarity."},
+                        {title: "Mentor Others", description: "Guide someone through renewal and growth."}
+                    ]
+                },
+                Summer: {
+                    physiological: [
+                        {title: "Sun Exposure", description: "Get morning sunlight daily."},
+                        {title: "Water Activities", description: "Swimming, sports, or beach time."},
+                        {title: "Summer Foods", description: "Berries, tomatoes, and fresh produce."}
+                    ],
+                    safety: [
+                        {title: "Career Acceleration", description: "Pursue promotions and side projects."},
+                        {title: "Financial Growth", description: "Invest, save, or launch ventures."},
+                        {title: "Boundary Setting", description: "Build protective boundaries."}
+                    ],
+                    love: [
+                        {title: "Family Time", description: "Plan vacations and reunions."},
+                        {title: "Social Events", description: "Host gatherings and celebrations."},
+                        {title: "Relationship Investment", description: "Deepen important bonds."}
+                    ],
+                    esteem: [
+                        {title: "Achievement Push", description: "Complete major projects."},
+                        {title: "Fitness Peak", description: "Build strength and endurance."},
+                        {title: "Leadership", description: "Step into leadership roles."}
+                    ],
+                    actualization: [
+                        {title: "Big Dreams", description: "Dream boldly and take action."},
+                        {title: "Adventure", description: "Travel and explore new places."},
+                        {title: "Create Boldly", description: "Produce significant creative work."}
+                    ]
+                },
+                Autumn: {
+                    physiological: [
+                        {title: "Harvest Foods", description: "Apples, squash, root vegetables."},
+                        {title: "Restorative Yoga", description: "Gentle movement and stretching."},
+                        {title: "Sleep Enhancement", description: "Honor your sleep needs."}
+                    ],
+                    safety: [
+                        {title: "Life Audit", description: "Review year's progress and wins."},
+                        {title: "Financial Review", description: "Assess spending and investments."},
+                        {title: "Release Patterns", description: "Let go of what doesn't serve."}
+                    ],
+                    love: [
+                        {title: "Deepen Bonds", description: "Quality time with loved ones."},
+                        {title: "Appreciation Circles", description: "Celebrate important people."},
+                        {title: "Vulnerable Sharing", description: "Share struggles and grow."}
+                    ],
+                    esteem: [
+                        {title: "Celebrate Wins", description: "Acknowledge your achievements."},
+                        {title: "Skills Assessment", description: "Evaluate growth and strength."},
+                        {title: "Wisdom Sharing", description: "Mentor and share lessons."}
+                    ],
+                    actualization: [
+                        {title: "Reflect Deeply", description: "Journal on life lessons."},
+                        {title: "Life Review", description: "Contemplate purpose and meaning."},
+                        {title: "Create Legacy", description: "Document your story."}
+                    ]
+                },
+                Winter: {
+                    physiological: [
+                        {title: "Embrace Stillness", description: "Allow rest and recovery."},
+                        {title: "Warming Foods", description: "Soups, teas, and spices."},
+                        {title: "Light Therapy", description: "Combat darkness with light."}
+                    ],
+                    safety: [
+                        {title: "Sanctuary Creation", description: "Create a cozy refuge."},
+                        {title: "Self-Care Priority", description: "Rest and heal."},
+                        {title: "Secure Future", description: "Plan and review security."}
+                    ],
+                    love: [
+                        {title: "Traditions", description: "Celebrate with intention."},
+                        {title: "Letter Writing", description: "Thoughtful messages."},
+                        {title: "Intimate Gatherings", description: "Small meaningful moments."}
+                    ],
+                    esteem: [
+                        {title: "Knowledge Building", description: "Learn deeply and widely."},
+                        {title: "Year-End Review", description: "Celebrate full-year wins."},
+                        {title: "Confidence Building", description: "Recognize inner strength."}
+                    ],
+                    actualization: [
+                        {title: "Spiritual Practice", description: "Meditation and contemplation."},
+                        {title: "Purpose Clarity", description: "Connect to your calling."},
+                        {title: "Creative Writing", description: "Journal and poetry."}
+                    ]
+                }
+            }
+        };
+
+        const seasons = {Spring: "🌱", Summer: "☀️", Autumn: "🍂", Winter: "❄️"};
+
+        // Season selection
+        document.querySelectorAll(".season-option").forEach(option => {
+            option.addEventListener("click", function() {
+                selectSeason(this.dataset.season);
+            });
+        });
+
+        function selectSeason(season) {
+            app.currentSeason = season;
+            document.querySelectorAll(".season-option").forEach(opt => opt.classList.remove("active"));
+            document.querySelector(`[data-season="${season}"]`).classList.add("active");
+            document.getElementById("startBtn").disabled = false;
+            document.getElementById("startBtn").onclick = () => goToStrategies();
+        }
+
+        // Navigation
+        function goToSplash() { switchScreen("splashScreen"); }
+        function goToStrategies() { switchScreen("strategiesScreen"); renderStrategies(); }
+        function goToChosen() { switchScreen("chosenScreen"); renderChosen(); }
+        function goToVisionBoard() { switchScreen("visionBoardScreen"); renderVisionBoard(); }
+
+        function switchScreen(screenId) {
+            document.querySelectorAll(".screen").forEach(s => s.classList.remove("active"));
+            document.getElementById(screenId).classList.add("active");
+            window.scrollTo(0, 0);
+        }
+
+        // Render strategies
+        function renderStrategies() {
+            const season = app.currentSeason;
+            
+            const filterContainer = document.getElementById("seasonFilter");
+            filterContainer.innerHTML = Object.keys(seasons).map(s => `
+                <button class="season-btn ${s === season ? "active" : ""}" onclick="changeSeason('${s}')">
+                    ${seasons[s]} ${s}
+                </button>
+            `).join("");
+
+            const grid = document.getElementById("strategiesGrid");
+            const strategiesData = app.strategies[season] || {};
+            
+            let html = "";
+            Object.keys(strategiesData).forEach(layerKey => {
+                strategiesData[layerKey].forEach((strategy, idx) => {
+                    const strategyId = `${season}-${layerKey}-${idx}`;
+                    const isSelected = app.chosenStrategies.some(s => s.id === strategyId);
+
+                    html += `
+                        <div class="strategy-tile ${isSelected ? "selected" : ""}" 
+                             onclick="toggleStrategy('${strategyId}', '${season}', '${layerKey}', '${strategy.title}')">
+                            <input type="checkbox" class="strategy-checkbox" ${isSelected ? "checked" : ""} 
+                                   onclick="toggleStrategy('${strategyId}', '${season}', '${layerKey}', '${strategy.title}'); event.stopPropagation();">
+                            <div class="strategy-category">${layerKey}</div>
+                            <div class="strategy-title">${strategy.title}</div>
+                            <div class="strategy-description">${strategy.description}</div>
+                        </div>
+                    `;
+                });
+            });
+
+            grid.innerHTML = html;
+            document.getElementById("chosenCount").textContent = app.chosenStrategies.length;
+        }
+
+        function changeSeason(season) {
+            app.currentSeason = season;
+            renderStrategies();
+        }
+
+        function toggleStrategy(id, season, layer, title) {
+            const index = app.chosenStrategies.findIndex(s => s.id === id);
+            if (index >= 0) {
+                app.chosenStrategies.splice(index, 1);
+            } else {
+                app.chosenStrategies.push({id, season, layer, title});
+            }
+            renderStrategies();
+        }
+
+        // Render chosen
+        function renderChosen() {
+            const summary = document.getElementById("chosenSummary");
+            const byLayer = {};
+            
+            app.chosenStrategies.forEach(s => {
+                byLayer[s.layer] = (byLayer[s.layer] || 0) + 1;
+            });
+
+            let summaryHTML = `<div class="summary-card"><div class="summary-number">${app.chosenStrategies.length}</div><div class="summary-label">Total Chosen</div></div>`;
+            Object.keys(byLayer).forEach(layer => {
+                summaryHTML += `<div class="summary-card"><div class="summary-number">${byLayer[layer]}</div><div class="summary-label">${layer}</div></div>`;
+            });
+            summary.innerHTML = summaryHTML;
+
+            const listContent = document.getElementById("chosenListContent");
+            if (app.chosenStrategies.length === 0) {
+                listContent.innerHTML = "<p style='color: #cbd5e1;'>No strategies chosen yet. Go back to select some!</p>";
+                return;
+            }
+
+            const byLayerList = {};
+            app.chosenStrategies.forEach(s => {
+                if (!byLayerList[s.layer]) byLayerList[s.layer] = [];
+                byLayerList[s.layer].push(s);
+            });
+
+            let listHTML = "";
+            Object.keys(byLayerList).forEach(layer => {
+                listHTML += `
+                    <div class="chosen-by-layer">
+                        <div class="layer-name">${layer}</div>
+                        <div class="chosen-items">
+                            ${byLayerList[layer].map(s => `
+                                <div class="chosen-item">
+                                    ${s.title}
+                                    <button class="chosen-item-remove" onclick="removeChosen('${s.id}')">×</button>
+                                </div>
+                            `).join("")}
+                        </div>
+                    </div>
+                `;
+            });
+            listContent.innerHTML = listHTML;
+        }
+
+        function removeChosen(id) {
+            app.chosenStrategies = app.chosenStrategies.filter(s => s.id !== id);
+            renderChosen();
+            renderStrategies();
+        }
+
+        // Vision board
+        function renderVisionBoard() {
+            const gallery = document.getElementById("visionPinboard");
+            if (app.visionBoardImages.length === 0) {
+                gallery.innerHTML = '<div class="empty-board" style="width: 100%;"><div class="empty-board-icon">📌</div><p>Upload images to begin pinning your vision</p></div>';
+                return;
+            }
+
+            gallery.innerHTML = app.visionBoardImages.map((img, idx) => `
+                <div class="pinned-image ${app.editMode ? "edit-mode" : ""}" style="width: ${img.width || 200}px;" id="image-${idx}"
+                     draggable="true" ondragstart="startDrag(event, ${idx})" ondragend="endDrag(event)" ondrop="drop(event, ${idx})" ondragover="allowDrop(event)">
+                    <img src="${img.src}" alt="Vision board image" style="--rotation: ${img.rotation || 0}deg;">
+                    <div class="pinned-controls">
+                        <button class="control-btn" onclick="rotateImage(${idx})">↻ Rotate</button>
+                        <button class="control-btn" onclick="removeImage(${idx})">🗑️ Remove</button>
+                    </div>
+                    <div class="rotate-input" id="rotate-${idx}">
+                        <input type="number" id="rotation-${idx}" min="0" max="360" value="${img.rotation || 0}" placeholder="Degrees">
+                        <button onclick="applyRotation(${idx})">Apply</button>
+                        <button onclick="closeRotation(${idx})">Done</button>
+                    </div>
+                </div>
+            `).join("");
+        }
+
+        function toggleEditMode() {
+            app.editMode = !app.editMode;
+            const btn = document.getElementById("editToggleBtn");
+            const hint = document.getElementById("editHint");
+            const pinboard = document.getElementById("visionPinboard");
+            
+            if (app.editMode) {
+                btn.textContent = "✓ Done Editing";
+                btn.style.background = "linear-gradient(135deg, #22c55e 0%, #16a34a 100%)";
+                hint.classList.add("active");
+                pinboard.classList.add("edit-mode");
+            } else {
+                btn.textContent = "✏️ Edit Board";
+                btn.style.background = "";
+                hint.classList.remove("active");
+                pinboard.classList.remove("edit-mode");
+            }
+            renderVisionBoard();
+        }
+
+        function startDrag(e, idx) {
+            if (!app.editMode) return;
+            app.draggedElement = e.target.closest(".pinned-image");
+            app.draggedElement.classList.add("dragging");
+        }
+
+        function endDrag(e) {
+            if (app.draggedElement) {
+                app.draggedElement.classList.remove("dragging");
+            }
+        }
+
+        function allowDrop(e) {
+            if (app.editMode) {
+                e.preventDefault();
+            }
+        }
+
+        function drop(e, idx) {
+            if (!app.editMode) return;
+            e.preventDefault();
+        }
+
+        document.getElementById("imageFileInput").addEventListener("change", function(e) {
+            const files = Array.from(e.target.files);
+            files.forEach(file => {
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    const img = new Image();
+                    img.onload = function() {
+                        app.visionBoardImages.push({
+                            src: event.target.result,
+                            rotation: 0,
+                            width: Math.min(img.width, 250),
+                            strategy: app.chosenStrategies[Math.floor(Math.random() * app.chosenStrategies.length)]?.title || "Vision"
+                        });
+                        renderVisionBoard();
+                    };
+                    img.src = event.target.result;
+                };
+                reader.readAsDataURL(file);
+            });
+            e.target.value = "";
+        });
+
+        function rotateImage(idx) {
+            document.getElementById(`rotate-${idx}`).classList.add("active");
+        }
+
+        function applyRotation(idx) {
+            const rotation = parseInt(document.getElementById(`rotation-${idx}`).value) || 0;
+            app.visionBoardImages[idx].rotation = rotation % 360;
+            renderVisionBoard();
+        }
+
+        function closeRotation(idx) {
+            document.getElementById(`rotate-${idx}`).classList.remove("active");
+        }
+
+        function removeImage(idx) {
+            app.visionBoardImages.splice(idx, 1);
+            renderVisionBoard();
+        }
+
+        // Save/Share/Download
+        function saveBoard() {
+            const boardData = {
+                season: app.currentSeason,
+                strategies: app.chosenStrategies,
+                images: app.visionBoardImages.map(img => ({
+                    src: img.src,
+                    rotation: img.rotation,
+                    width: img.width
+                })),
+                savedAt: new Date().toISOString()
+            };
+            localStorage.setItem(`hierarchivision-${app.currentSeason}`, JSON.stringify(boardData));
+            alert("✅ Vision board saved successfully!");
+        }
+
+        function shareBoard() {
+            const shareText = `Check out my ${app.currentSeason} HierarchiVision board! ${app.chosenStrategies.length} strategies + ${app.visionBoardImages.length} images of inspiration. 📌✨`;
+            
+            if (navigator.share) {
+                navigator.share({
+                    title: "HierarchiVision Board",
+                    text: shareText
+                });
+            } else {
+                const encodedText = encodeURIComponent(shareText);
+                window.open(`https://twitter.com/intent/tweet?text=${encodedText}`, '_blank');
+            }
+        }
+
+        function downloadBoard() {
+            if (app.visionBoardImages.length === 0) {
+                alert("Please add images first!");
+                return;
+            }
+
+            let imagesHTML = "";
+            app.visionBoardImages.forEach((img, idx) => {
+                imagesHTML += `
+                    <div class="image-item">
+                        <img src="${img.src}" alt="Vision board image" style="transform: rotate(${img.rotation}deg);">
+                    </div>
+                `;
+            });
+
+            const html = `<!DOCTYPE html>
+<html>
+<head>
+    <title>HierarchiVision Board - ${app.currentSeason}</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { 
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #c4a57b 0%, #d4a574 100%);
+            padding: 40px 20px;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: linear-gradient(135deg, #c4a57b 0%, #d4a574 100%);
+            border: 15px solid #8B4513;
+            border-radius: 8px;
+            padding: 30px;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.5);
+        }
+        h1 {
+            text-align: center;
+            color: #2a2a2a;
+            margin-bottom: 30px;
+            font-size: 2.5rem;
+        }
+        .board {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+            align-items: flex-start;
+        }
+        .image-item {
+            background: white;
+            padding: 8px;
+            border-radius: 2px;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.25);
+            position: relative;
+        }
+        .image-item::before {
+            content: '';
+            position: absolute;
+            top: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 18px;
+            height: 18px;
+            background: radial-gradient(circle at 30% 30%, #ffeb3b, #fbc02d);
+            border-radius: 50%;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.4);
+            z-index: 10;
+        }
+        img {
+            display: block;
+            max-width: 250px;
+            height: auto;
+            border-radius: 2px;
+        }
+        .strategies {
+            margin-top: 40px;
+            background: rgba(255,255,255,0.9);
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+        }
+        .strategies h2 {
+            color: #2a2a2a;
+            margin-bottom: 15px;
+        }
+        .strategy-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+        }
+        .strategy-tag {
+            background: #d4a574;
+            color: white;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📌 HierarchiVision - ${app.currentSeason}</h1>
+        <div class="board">${imagesHTML}</div>
+        <div class="strategies">
+            <h2>My Pinned Strategies</h2>
+            <div class="strategy-list">
+                ${app.chosenStrategies.map(s => `<span class="strategy-tag">${s.title}</span>`).join('')}
+            </div>
+        </div>
+    </div>
+</body>
+</html>`;
+
+            const blob = new Blob([html], {type: "text/html"});
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement("a");
+            a.href = url;
+            a.download = `vision-board-${app.currentSeason}.html`;
+            a.click();
+            URL.revokeObjectURL(url);
+        }
+    </script>
+</body>
+</html>
